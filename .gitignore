@@ -1,0 +1,23 @@
+# Real database credentials (never upload to GitHub)
+config/database.php
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+
+# Temporary and backup files
+*.tmp
+*.bak
+*.swp
+
+# Windows system files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# VS Code personal settings and workspace files
+.vscode/
+*.code-workspace
