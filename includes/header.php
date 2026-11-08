@@ -3,10 +3,8 @@
 // Top part of every page: <head>, Bootstrap CSS and the navigation bar.
 // A page can set $page_title before including this file.
 
-// If the project folder is ever renamed or moved, change only this line.
-if (!defined('BASE_URL')) {
-    define('BASE_URL', '/student-job-portal/');
-}
+// Starts the session and loads the helper functions (including BASE_URL).
+require_once __DIR__ . '/auth.php';
 
 if (!isset($page_title)) {
     $page_title = 'Student Job Portal';
@@ -42,3 +40,4 @@ if (!isset($page_title)) {
 </nav>
 
 <main class="container flex-grow-1 py-4">
+<?php show_flash(); ?>
