@@ -54,3 +54,35 @@ function show_flash()
 
     unset($_SESSION['flash']);
 }
+
+// CSRF protection: a secret code placed in every form.
+function csrf_token()
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+// The hidden input to put inside every <form>.
+function csrf_field()
+{
+    return '<input type="hidden" name="csrf_token" value="' . e(csrf_token()) . '">';
+}
+
+// Did the submitted form send the correct secret code?
+function csrf_check()
+{
+    $sent = $_POST['csrf_token'] ?? '';
+    return is_string($sent)
+        && isset($_SESSION['csrf_token'])
+        && hash_equals($_SESSION['csrf_token'], $sent);
+}
+
+// Print the error message for one form field (if it has one).
+function field_error($errors, $key)
+{
+    if (isset($errors[$key])) {
+        echo '<div class="text-danger small mt-1">' . e($errors[$key]) . '</div>';
+    }
+}
