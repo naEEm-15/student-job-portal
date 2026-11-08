@@ -62,10 +62,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['company_name'] = 'Company name must be 2 to 150 characters.';
     }
 
-    // 4. No errors? (Task 1.3 will save the account here.)
+    // 4. No errors? Save the account.
     if (empty($errors)) {
-        set_flash('info', 'Validation passed. Saving the account comes in the next task.');
-        redirect('register.php');
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $saved = false;
+
+        try {
+            // Start a transaction: both inserts succeed, or neither does.
+            $pdo->beginTransaction();
+
+            $stmt = $pdo->prepare(
+                'INSERT INTO users (full_name, email, password_hash, role) VALUES (?, ?, ?, ?)'
+            );
+            $stmt->execute([$full_name, $email, $password_hash, $role]);
+            $user_id = (int) $pdo->lastInsertId();   // the id MySQL just gave to this user
+
+            if ($role === 'student') {
+                $stmt = $pdo->prepare('INSERT INTO student_profiles (user_id) VALUES (?)');
+                $stmt->execute([$user_id]);
+            } else {
+                $stmt = $pdo->prepare(
+                    'INSERT INTO employer_profiles (user_id, company_name) VALUES (?, ?)'
+                );
+                $stmt->execute([$user_id, $company_name]);
+            }
+
+            $pdo->commit();   // make both inserts permanent
+            $saved = true;
+
+        } catch (PDOException $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();   // undo everything from this attempt
+            }
+
+            if ((int) ($e->errorInfo[1] ?? 0) === 1062) {
+                // 1062 = duplicate value in a UNIQUE column (the email)
+                $errors['email'] = 'This email is already registered.';
+            } else {
+                error_log('Registration failed: ' . $e->getMessage());
+                $errors['form'] = 'Sorry, we could not create your account. Please try again.';
+            }
+        }
+
+        if ($saved) {
+            set_flash('success', 'Account created successfully. Login comes in the next task.');
+            redirect('index.php');   // Task 1.4 will change this to login.php
+        }
     }
 }
 
