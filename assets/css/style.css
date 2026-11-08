@@ -1,0 +1,10 @@
+/* Our own small styles, added on top of Bootstrap */
+body {
+    background-color: #f8f9fa;
+}
+
+.hero {
+    background: #ffffff;
+    border-radius: 0.5rem;
+    padding: 3rem 1.5rem;
+}
