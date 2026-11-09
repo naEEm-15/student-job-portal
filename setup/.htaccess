@@ -1,0 +1,2 @@
+# Block all web access to this folder. The setup script is for the command line only.
+Require all denied
