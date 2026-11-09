@@ -91,3 +91,11 @@ function null_if_empty($value)
 {
     return $value === '' ? null : $value;
 }
+// Find the student_id that belongs to a logged-in user (or null if none).
+function get_student_id($pdo, $user_id)
+{
+    $stmt = $pdo->prepare('SELECT student_id FROM student_profiles WHERE user_id = ?');
+    $stmt->execute([$user_id]);
+    $id = $stmt->fetchColumn();
+    return $id === false ? null : (int) $id;
+}

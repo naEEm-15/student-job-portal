@@ -16,6 +16,9 @@ require_once __DIR__ . '/../includes/header.php';
     <a class="list-group-item list-group-item-action" href="<?php echo BASE_URL; ?>student/profile.php">
         My Profile
     </a>
+    <a class="list-group-item list-group-item-action" href="<?php echo BASE_URL; ?>student/education.php">
+        My Education
+    </a>
 </div>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
