@@ -4,7 +4,9 @@
 
 // The web path of the project. If you rename the folder, change only this line.
 if (!defined('BASE_URL')) {
-    define('BASE_URL', '/student-job-portal/');
+    // On XAMPP the project is in a sub-folder; on a hosting account it is the site root.
+    $host = $_SERVER['SERVER_NAME'] ?? '';
+    define('BASE_URL', in_array($host, ['localhost', '127.0.0.1'], true) ? '/student-job-portal/' : '/');
 }
 
 // Make text safe to print inside HTML. This stops XSS (script injection).
