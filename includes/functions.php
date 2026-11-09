@@ -86,3 +86,8 @@ function field_error($errors, $key)
         echo '<div class="text-danger small mt-1">' . e($errors[$key]) . '</div>';
     }
 }
+// Turn an empty string into NULL (for optional database columns).
+function null_if_empty($value)
+{
+    return $value === '' ? null : $value;
+}
